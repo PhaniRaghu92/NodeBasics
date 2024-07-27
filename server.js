@@ -1,5 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const cors = require('cors');
 
 const employeeRouter = require('./routes/employeeRoute');
 const { validate } = require('./middlewares/validation'); //named export
@@ -8,6 +9,7 @@ const db = require('./db');
 const app = express();
 
 //middle ware
+app.use(cors());
 app.use(express.json()); // this middleware help in accepting data in req.body
 
 //

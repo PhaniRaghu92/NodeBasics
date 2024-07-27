@@ -3,22 +3,31 @@ const empRouter = express.Router();
 const { StatusCodes } = require('http-status-codes');
 
 const Employee = require('../models/employee');
+const { AsyncHandler } = require('../util');
 
 //HTTP GET
-empRouter.get('/', async (req, res) => {
-  try {
+// empRouter.get('/', async (req, res) => {
+//   try {
+//     const results = await Employee.find({});
+//     res.status(200).json({ result: results });
+//   } catch (error) {
+//     res.status(500).json('INTERNAL SERVER ERROR');
+//   }
+// });
+
+empRouter.get(
+  '/',
+  AsyncHandler(async (req, res) => {
     const results = await Employee.find({});
     res.status(200).json({ result: results });
-  } catch (error) {
-    res.status(500).json('INTERNAL SERVER ERROR');
-  }
-});
+  })
+);
 
 //HTTP GET/:id
-empRouter.get('/:id', async (req, res) => {
-  const { id } = req.params;
-
-  try {
+empRouter.get(
+  '/:id',
+  AsyncHandler(async (req, res) => {
+    const { id } = req.params;
     const employee = await Employee.findOne({ _id: id });
     if (!employee) {
       return res
@@ -26,10 +35,24 @@ empRouter.get('/:id', async (req, res) => {
         .json({ result: 'Unable to find the employee with id ' + id });
     }
     res.status(200).json(employee);
-  } catch (error) {
-    res.status(500).json('INTERNAL SERVER ERROR');
-  }
-});
+  })
+);
+
+// empRouter.get('/:id', async (req, res) => {
+//   const { id } = req.params;
+
+//   try {
+//     const employee = await Employee.findOne({ _id: id });
+//     if (!employee) {
+//       return res
+//         .status(404)
+//         .json({ result: 'Unable to find the employee with id ' + id });
+//     }
+//     res.status(200).json(employee);
+//   } catch (error) {
+//     res.status(500).json('INTERNAL SERVER ERROR');
+//   }
+// });
 
 //HTTP PUT/:id
 empRouter.put('/:id', async (req, res) => {
